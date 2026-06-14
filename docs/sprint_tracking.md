@@ -82,6 +82,9 @@ each other and `PLAN.md`, and are committed. ☑
 
 ### S1 — Project Bootstrap ☐  *(Phase 1)*
 
+**Execution Plan:** [`docs/sprint_s1_execution_plan.md`](sprint_s1_execution_plan.md) (21 tasks,
+dependency graph, critical path, risks, review checkpoints, ADRs).
+
 **Goal:** A working, reproducible monorepo with infrastructure, database, and auth.
 
 - [ ] Monorepo initialized with `uv`, `ruff`, `mypy`, `pytest`, GitHub Actions CI
