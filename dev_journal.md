@@ -184,7 +184,7 @@ Every entry **must** contain all of the following, in this order:
     links**.
   - No code/linters apply (no application code yet); validation is documentation-consistency only,
     stated honestly.
-- **Commit Hash:** _pending_
+- **Commit Hash:** `65ba42f936a83fbf8b1965235cf6cf06e1e3c550` (`docs: add Claude Code Operating System (CCOS) with audit hardening`; hash recorded via the documented backfill follow-up commit)
 - **Next Recommended Task:** Begin **S1 — Project Bootstrap** with `/prime-context` then
   `/start-task S1-T01` (repo hygiene & monorepo skeleton). Consider, as optional future CCOS work,
   a Git pre-commit/CI hook that enforces "journal entry present" and "no `_pending_` hash on `main`".
