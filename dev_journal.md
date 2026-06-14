@@ -123,7 +123,7 @@ Every entry **must** contain all of the following, in this order:
     cross-reference link resolves to a file that now exists.
   - No automated tests/linters apply yet — there is no application code; the toolchain is wired up in
     Sprint S1. This is stated explicitly rather than implying a green build.
-- **Commit Hash:** _pending_
+- **Commit Hash:** `f88d2519b0dac1f9e6a2bdbc7cdd88bfa1cf7540` (`docs: establish development operating system`; hash recorded via the documented backfill follow-up commit)
 - **Next Recommended Task:** Begin **S1 — Project Bootstrap** (Phase 1): initialize the monorepo with
   `uv`/`ruff`/`mypy`/`pytest`, author `docker-compose.yml` for the full local stack, implement the
   database schema with Alembic migrations, and stand up the FastAPI app factory with JWT auth — per
