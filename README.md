@@ -118,6 +118,8 @@ Live, sprint-level progress: [`docs/sprint_tracking.md`](docs/sprint_tracking.md
 | [`docs/decision_log.md`](docs/decision_log.md) | Architecture Decision Records (ADRs). |
 | [`dev_journal.md`](dev_journal.md) | The complete chronological engineering history. |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute. |
+| [`CLAUDE.md`](CLAUDE.md) | Auto-loaded operating brief for Claude Code sessions. |
+| [`.claude/README.md`](.claude/README.md) | The Claude Code Operating System (CCOS): session commands, context, and templates. |
 
 ## How We Build
 
@@ -125,6 +127,12 @@ This project runs on a documented **development operating system**: every task f
 workflow (analyze → implement → validate → test → document → journal → commit → verify), every
 significant decision is recorded as an ADR, and every completed task appends an entry to the
 engineering journal. See [`docs/development_workflow.md`](docs/development_workflow.md).
+
+Because this repo is built primarily with Claude Code, that workflow is operationalized as the
+**Claude Code Operating System** ([`.claude/`](.claude/README.md)) — reusable session commands
+(`/prime-context`, `/start-task`, `/review-task`, `/security-review`, `/close-task`, …), context
+files, and templates, fronted by the auto-loaded [`CLAUDE.md`](CLAUDE.md) — so every session stays
+consistent without re-deriving the rules.
 
 ## Contributing
 
