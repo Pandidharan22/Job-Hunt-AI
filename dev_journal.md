@@ -282,7 +282,7 @@ Every entry **must** contain all of the following, in this order:
   - `git check-ignore` → none of the five placeholders are ignored by `.gitignore`.
   - Top-level shape confirmed: `.github/ apps/ backend/ docs/ infra/ scripts/` (matches PLAN §6).
   - No code toolchain yet (arrives in T02); validation is git-level, stated honestly.
-- **Commit Hash:** _pending_
+- **Commit Hash:** `3a6fa22752e6bcd61a9b557b113f564ff9936b07` (`chore(repo): add top-level monorepo directory skeleton (S1-T01B)`; hash recorded via the documented backfill follow-up commit)
 - **Next Recommended Task:** **S1-T02 — Backend project init**: `backend/pyproject.toml` with `uv`,
   `ruff` (line-length 100, `select=ALL`), `mypy` strict, and `pytest`/`pytest-asyncio`/`pytest-cov`;
   `backend/.python-version`; `backend/app/__init__.py`. (At that point `backend/.gitkeep` is removed.)
