@@ -1,0 +1,2 @@
+# Keeps this directory in git until it has real content. Remove when populated.
+# infra/ — infrastructure config (docker-compose, nginx, etc.). First arrives: Sprint S1-T17.

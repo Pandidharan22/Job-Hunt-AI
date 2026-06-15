@@ -242,3 +242,47 @@ Every entry **must** contain all of the following, in this order:
 - **Next Recommended Task:** **S1-T01B** — monorepo directory skeleton (`apps/`, `backend/`, `infra/`,
   `scripts/`, `.github/workflows/` with `.gitkeep`), then **S1-T02** (uv/ruff/mypy/pytest init). Not
   started this session per scope.
+
+### 2026-06-15T17:23Z — S1-T01B — Monorepo directory skeleton
+
+- **Timestamp:** 2026-06-15T17:23Z (22:53 IST)
+- **Sprint:** S1 — Project Bootstrap
+- **Phase:** Phase 1 — Core Foundation & Job Discovery
+- **Task Name:** S1-T01B — Monorepo directory skeleton (top-level workspaces)
+- **Objective:** Establish the top-level monorepo directory shape from [`PLAN.md` §6](PLAN.md) so
+  subsequent tasks have a home, completing S1-T01. Directory structure only — no application code, no
+  pre-created nested folders.
+- **Files Modified:**
+  - `apps/.gitkeep` (created)
+  - `backend/.gitkeep` (created)
+  - `infra/.gitkeep` (created)
+  - `scripts/.gitkeep` (created)
+  - `.github/workflows/.gitkeep` (created)
+  - `CLAUDE.md` (updated: next task → S1-T02; state-of-main notes the skeleton)
+  - `.claude/context/sprint_status.md` (updated: T01 ☑; status "T01 done; T02 next")
+  - `dev_journal.md` (this entry)
+- **Technical Decisions:**
+  - Created exactly the five top-level directories listed in the T01 task card — `apps/`, `backend/`,
+    `infra/`, `scripts/`, `.github/workflows/` — each held in git by a single `.gitkeep`.
+  - Did **not** create the deeper structure (`backend/app/api/…`, `apps/web/src/…`, `infra/nginx/…`)
+    or the three app workspaces; those are created with their code in their own tasks/sprints.
+  - Each `.gitkeep` carries a one-line comment stating its purpose and that it should be removed once
+    the directory has real content. `docs/` already exists and needs no placeholder.
+- **Reasoning Behind Decisions:**
+  - Git cannot track empty directories, so `.gitkeep` is the minimal, conventional mechanism to make a
+    directory exist in version control without inventing placeholder code.
+  - Creating only the top level (not the nested tree) avoids empty folders lingering for many sprints
+    and respects "do not create future files merely because a folder might need them later."
+- **Problems Encountered:** None.
+- **Solutions Applied:** N/A.
+- **Validation Performed:**
+  - `git status --short` → exactly five `A .gitkeep` entries, nothing else.
+  - `find apps backend infra scripts .github -type f` → only the five `.gitkeep` files (no app code,
+    nothing pre-created).
+  - `git check-ignore` → none of the five placeholders are ignored by `.gitignore`.
+  - Top-level shape confirmed: `.github/ apps/ backend/ docs/ infra/ scripts/` (matches PLAN §6).
+  - No code toolchain yet (arrives in T02); validation is git-level, stated honestly.
+- **Commit Hash:** _pending_
+- **Next Recommended Task:** **S1-T02 — Backend project init**: `backend/pyproject.toml` with `uv`,
+  `ruff` (line-length 100, `select=ALL`), `mypy` strict, and `pytest`/`pytest-asyncio`/`pytest-cov`;
+  `backend/.python-version`; `backend/app/__init__.py`. (At that point `backend/.gitkeep` is removed.)

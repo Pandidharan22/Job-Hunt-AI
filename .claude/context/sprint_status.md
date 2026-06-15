@@ -8,7 +8,7 @@
 
 - **Phase:** Phase 1 — Core Foundation & Job Discovery
 - **Sprint:** **S1 — Project Bootstrap**
-- **Status:** ◐ In progress (T01A done; T01B next)
+- **Status:** ◐ In progress (T01 done; T02 next)
 - **Entry point:** [`docs/sprint_s1_execution_plan.md`](../../docs/sprint_s1_execution_plan.md)
 
 ---
@@ -42,7 +42,7 @@ T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → 
 
 | # | Task | Status | Deps | What it does |
 |---|------|--------|------|-------------|
-| **T01** | Repo hygiene & skeleton | ◐ | — | T01A ☑ `.gitattributes`/`.editorconfig`/`.gitignore`; T01B ☐ directory skeleton |
+| **T01** | Repo hygiene & skeleton | ☑ | — | T01A ☑ `.gitattributes`/`.editorconfig`/`.gitignore`; T01B ☑ top-level skeleton (`apps`/`backend`/`infra`/`scripts`/`.github/workflows` + `.gitkeep`) |
 | **T02** | Backend project init | ☐ | T01 | `uv`, `ruff`, `mypy`, `pytest`, `pyproject.toml` |
 | **T07** | ORM base, naming convention, mixins | ☐ | T02 | Declarative Base, UUID/timestamp mixins, SQL naming |
 | **T08** | Core domain models | ☐ | T07 | `User`, `UserPreferences`, `Company`, `Job` |

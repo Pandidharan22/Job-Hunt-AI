@@ -16,9 +16,10 @@ gates, running privately on the user's machine. Full spec: [`PLAN.md`](PLAN.md).
 
 - **Phase:** Phase 1 — Core Foundation & Job Discovery
 - **Sprint:** **S1 — Project Bootstrap** · status **◐ In progress**
-- **Next task:** **S1-T01B — Monorepo directory skeleton** (T01A repo-hygiene files are done)
+- **Next task:** **S1-T02 — Backend project init** (`uv`/`ruff`/`mypy`/`pytest`); T01 is done
 - **State of `main`:** governance + CCOS docs + repo-hygiene files
-  (`.gitattributes`/`.editorconfig`/`.gitignore`). **No application code has been written yet.**
+  (`.gitattributes`/`.editorconfig`/`.gitignore`) + top-level monorepo skeleton
+  (`apps`/`backend`/`infra`/`scripts`/`.github/workflows`, each a `.gitkeep`). **No application code yet.**
 - **Live status:** [`.claude/context/sprint_status.md`](.claude/context/sprint_status.md) ·
   [`docs/sprint_s1_execution_plan.md`](docs/sprint_s1_execution_plan.md)
 
