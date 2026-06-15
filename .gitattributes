@@ -1,0 +1,70 @@
+# Git attributes — JobHunt AI
+# Enforce consistent, cross-platform (Windows/Linux/macOS) line endings and
+# sensible diff/merge behavior. Text is normalized to LF in the repository and
+# checked out as LF everywhere. See https://git-scm.com/docs/gitattributes
+
+# --- Default: auto-detect text, store and check out as LF ----------------------
+* text=auto eol=lf
+
+# --- Explicit text types (defensive; keeps LF regardless of core.autocrlf) -----
+*.py      text eol=lf diff=python
+*.pyi     text eol=lf diff=python
+*.ts      text eol=lf
+*.tsx     text eol=lf
+*.js      text eol=lf
+*.jsx     text eol=lf
+*.mjs     text eol=lf
+*.cjs     text eol=lf
+*.json    text eol=lf
+*.jsonc   text eol=lf
+*.md      text eol=lf diff=markdown
+*.markdown text eol=lf diff=markdown
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.toml    text eol=lf
+*.cfg     text eol=lf
+*.ini     text eol=lf
+*.txt     text eol=lf
+*.html    text eol=lf diff=html
+*.css     text eol=lf diff=css
+*.scss    text eol=lf
+*.sql     text eol=lf
+*.sh      text eol=lf
+*.env     text eol=lf
+*.svg     text eol=lf
+Dockerfile        text eol=lf
+*.dockerfile      text eol=lf
+.gitignore        text eol=lf
+.gitattributes    text eol=lf
+.editorconfig     text eol=lf
+.dockerignore     text eol=lf
+
+# --- Windows-only scripts must keep CRLF ---------------------------------------
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+
+# --- Lockfiles: text, but suppress diffs (large, machine-generated) ------------
+uv.lock            text eol=lf -diff
+package-lock.json  text eol=lf -diff
+yarn.lock          text eol=lf -diff
+pnpm-lock.yaml     text eol=lf -diff
+Cargo.lock         text eol=lf -diff
+
+# --- Binary files: never normalize, never diff ---------------------------------
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
+*.webp    binary
+*.pdf     binary
+*.docx    binary
+*.xlsx    binary
+*.zip     binary
+*.gz      binary
+*.tar     binary
+*.woff    binary
+*.woff2   binary
+*.ttf     binary
+*.eot     binary
+*.otf     binary

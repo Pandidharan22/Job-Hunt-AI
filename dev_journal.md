@@ -188,3 +188,57 @@ Every entry **must** contain all of the following, in this order:
 - **Next Recommended Task:** Begin **S1 — Project Bootstrap** with `/prime-context` then
   `/start-task S1-T01` (repo hygiene & monorepo skeleton). Consider, as optional future CCOS work,
   a Git pre-commit/CI hook that enforces "journal entry present" and "no `_pending_` hash on `main`".
+
+### 2026-06-15T15:57Z — S1-T01A — Repository hygiene files
+
+- **Timestamp:** 2026-06-15T15:57Z (21:27 IST)
+- **Sprint:** S1 — Project Bootstrap
+- **Phase:** Phase 1 — Core Foundation & Job Discovery
+- **Task Name:** S1-T01A — Repository hygiene (`.gitattributes`, `.editorconfig`, `.gitignore`)
+- **Objective:** Establish cross-platform line-ending consistency, per-language editor defaults, and a
+  production-grade ignore set as the first slice of S1-T01 — closing the LF→CRLF warnings seen on the
+  earlier governance/CCOS commits. Scoped to the three root files only (no directory skeleton = T01B).
+- **Files Modified:**
+  - `.gitattributes` (created)
+  - `.editorconfig` (created)
+  - `.gitignore` (created)
+  - `CLAUDE.md` (updated "Where we are" block: S1 ◐ in progress; next = T01B)
+  - `.claude/context/sprint_status.md` (updated: S1 ◐, T01 ◐ with T01A/T01B split)
+  - `dev_journal.md` (this entry)
+- **Technical Decisions:**
+  - `.gitattributes`: `* text=auto eol=lf` as the default, with explicit per-type LF rules, `crlf`
+    only for `*.bat`/`*.cmd`, binaries marked `binary`, and lockfiles (`uv.lock`, `package-lock.json`,
+    …) marked `-diff`; added `diff=python`/`diff=markdown` hints.
+  - `.editorconfig`: UTF-8 / LF / final-newline / trim-trailing globally; Python = 4-space (max 100,
+    matching ruff), TS/JS/JSON/YAML/HTML/CSS/shell = 2-space, Markdown keeps trailing whitespace
+    (hard line breaks), Makefile = tabs, `*.bat`/`*.cmd` = CRLF.
+  - `.gitignore`: sectioned coverage for env/secrets (with `!*.example` negations), Python, uv
+    (`uv.lock` stays tracked), FastAPI runtime, Node, Playwright, Docker, VS Code (allow shared
+    `settings/extensions/launch/tasks.json`), JetBrains, and macOS/Windows/Linux OS artifacts.
+  - Did **not** create folders or renormalize history beyond verification — strictly T01A.
+- **Reasoning Behind Decisions:**
+  - `eol=lf` via `.gitattributes` is the authoritative fix for cross-platform consistency regardless
+    of each contributor's `core.autocrlf`; `.bat`/`.cmd` keep CRLF because Windows shells require it.
+  - `.editorconfig` indent sizes mirror the toolchain that lands in T02 (ruff 100-col, Prettier
+    2-space) so editors and linters agree from day one.
+  - `*.example` files are force-included so `.env.example` templates remain tracked while real `.env`
+    files can never be committed.
+- **Problems Encountered:** None. (Validated that `.env.example`/`backend/.env.example` are not
+  caught by the broad `.env*` ignore rules — the `!` negations handle them correctly.)
+- **Solutions Applied:** N/A.
+- **Validation Performed:**
+  - `git check-attr eol …` → `foo.py`=lf, `README.md`=lf, `script.bat`=crlf, `logo.png` text=unset. ✓
+  - `git check-ignore -q` over 13 paths that **must** be ignored (`.env`, `__pycache__/…`,
+    `node_modules/…`, `dist/…`, `.DS_Store`, `Thumbs.db`, `.idea/…`, `.venv/…`, `coverage.xml`, …) →
+    all ignored. ✓
+  - `git check-ignore -q` over paths that **must stay tracked** (`.env.example`,
+    `backend/.env.example`, `.vscode/settings.json`, `uv.lock`, `backend/app/main.py`) → none
+    ignored. ✓
+  - Staging the three files produced **no CRLF warnings**; `git add --renormalize .` produced **zero**
+    changes → existing repo is already LF-consistent.
+  - Note: `ruff`/`mypy`/`pytest` do not apply yet (toolchain arrives in T02); validation is git-level,
+    stated honestly rather than implying a code build.
+- **Commit Hash:** _pending_
+- **Next Recommended Task:** **S1-T01B** — monorepo directory skeleton (`apps/`, `backend/`, `infra/`,
+  `scripts/`, `.github/workflows/` with `.gitkeep`), then **S1-T02** (uv/ruff/mypy/pytest init). Not
+  started this session per scope.

@@ -1,0 +1,194 @@
+# .gitignore — JobHunt AI
+# Production-grade ignore set for a Python/FastAPI + Node monorepo running under
+# Docker. Keep generated artifacts, dependencies, caches, and secrets out of git.
+# NOTE: *.example files are intentionally tracked (see the Environment section).
+
+# =============================================================================
+# Environment & secrets — NEVER commit real values
+# =============================================================================
+.env
+.env.*
+*.env
+!.env.example
+!.env.*.example
+!*.env.example
+.envrc
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg
+*.egg-info/
+.eggs/
+develop-eggs/
+sdist/
+wheels/
+*.manifest
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Tooling caches (ruff, mypy, pytest, coverage, hypothesis)
+.ruff_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytest_cache/
+.cache/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+htmlcov/
+.hypothesis/
+.tox/
+.nox/
+nosetests.xml
+
+# Type checker / build info
+*.pytype/
+cython_debug/
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+
+# =============================================================================
+# uv (package manager)
+# =============================================================================
+# uv.lock IS committed for reproducible installs — do not ignore it.
+.uv/
+
+# =============================================================================
+# FastAPI / app runtime
+# =============================================================================
+*.db
+*.sqlite
+*.sqlite3
+instance/
+*.pid
+/data/
+local_data/
+
+# =============================================================================
+# Node / frontend (apps/web, apps/desktop, apps/mobile)
+# =============================================================================
+node_modules/
+.npm
+.pnp
+.pnp.*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build output
+.next/
+.nuxt/
+out/
+.vite/
+.parcel-cache/
+.turbo/
+*.tsbuildinfo
+
+# Lint/test caches & reports
+.eslintcache
+.stylelintcache
+
+# Frontend local env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =============================================================================
+# Browser automation (Playwright — Apply Agent, S4)
+# =============================================================================
+test-results/
+playwright-report/
+playwright/.cache/
+
+# =============================================================================
+# Docker
+# =============================================================================
+docker-compose.override.yml
+*.local.yml
+
+# =============================================================================
+# Editors / IDEs
+# =============================================================================
+# VS Code — ignore workspace state, but allow shared project config
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.code-workspace
+
+# JetBrains (PyCharm, WebStorm, IntelliJ)
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# Vim / Emacs / misc
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# =============================================================================
+# Logs & temp
+# =============================================================================
+*.log
+logs/
+*.tmp
+*.bak
+*.orig
+pip-log.txt
+
+# =============================================================================
+# Operating system artifacts
+# =============================================================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+.fuse_hidden*
+.nfs*
