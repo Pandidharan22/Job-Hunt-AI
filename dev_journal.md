@@ -238,7 +238,7 @@ Every entry **must** contain all of the following, in this order:
     changes → existing repo is already LF-consistent.
   - Note: `ruff`/`mypy`/`pytest` do not apply yet (toolchain arrives in T02); validation is git-level,
     stated honestly rather than implying a code build.
-- **Commit Hash:** _pending_
+- **Commit Hash:** `d414d35dad3535e774c4b6585866e9aacfe4fe74` (`chore(repo): add gitattributes, editorconfig and gitignore (S1-T01A)`; hash recorded via the documented backfill follow-up commit)
 - **Next Recommended Task:** **S1-T01B** — monorepo directory skeleton (`apps/`, `backend/`, `infra/`,
   `scripts/`, `.github/workflows/` with `.gitkeep`), then **S1-T02** (uv/ruff/mypy/pytest init). Not
   started this session per scope.
