@@ -335,6 +335,6 @@ Every entry **must** contain all of the following, in this order:
   - Cross-checked the execution plan and `sprint_status.md` agree on: spine, task count (22), T02A/T02B
     cards/rows, and dependency cells.
   - Planning-only: no code, so no `ruff`/`mypy`/`pytest` — stated honestly.
-- **Commit Hash:** _pending_
+- **Commit Hash:** `3f5ddee42b0915d922215cf0e311134a711f7afe` (`docs(plan): split S1-T02 into T02A (uv bootstrap) and T02B (toolchain)`; hash recorded via the documented backfill follow-up commit)
 - **Next Recommended Task:** **S1-T02A — Backend uv project bootstrap** (declare + lock the S1 runtime
   dependency surface; importable `app` package), then **S1-T02B** (ruff/mypy/pytest config).
