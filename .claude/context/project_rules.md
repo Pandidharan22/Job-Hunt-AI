@@ -128,7 +128,7 @@ ADR-0005 allows Groq as a hosted fallback if local is too slow).
 
 ## Sprint Workflow
 
-1. **Current sprint:** S1 — Project Bootstrap (21 tasks, dependency-ordered).
+1. **Current sprint:** S1 — Project Bootstrap (22 tasks, dependency-ordered; T02 = T02A + T02B).
 2. **Task execution:** Follow the eight-step workflow in [`docs/development_workflow.md`](../../docs/development_workflow.md):
    - Analyze → Implement → Validate → Test → Document → Journal → Commit → Verify
 3. **Task tracking:** [`docs/sprint_tracking.md`](../../docs/sprint_tracking.md) + [`docs/sprint_s1_execution_plan.md`](../../docs/sprint_s1_execution_plan.md).

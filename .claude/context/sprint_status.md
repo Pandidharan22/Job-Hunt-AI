@@ -8,7 +8,7 @@
 
 - **Phase:** Phase 1 — Core Foundation & Job Discovery
 - **Sprint:** **S1 — Project Bootstrap**
-- **Status:** ◐ In progress (T01 done; T02 next)
+- **Status:** ◐ In progress (T01 done; T02A next)
 - **Entry point:** [`docs/sprint_s1_execution_plan.md`](../../docs/sprint_s1_execution_plan.md)
 
 ---
@@ -23,17 +23,17 @@ All of these must be true for S1 to be complete:
 - [ ] CI runs format-check + lint + type-check + tests on every PR; green build required.
 - [ ] `.env.example` documents every variable from [`PLAN.md` §12.2](../../PLAN.md).
 - [ ] Backend code coverage ≥ 70% (target for Phase 1).
-- [ ] All 21 tasks (T01–T21) complete + merged to `main`.
+- [ ] All 22 tasks (T01–T21; T02 = T02A + T02B) complete + merged to `main`.
 - [ ] Journal entries for all tasks + one retrospective entry at sprint close.
 
 ---
 
-## S1 Tasks (21 Total) — Critical Path
+## S1 Tasks (22 Total) — Critical Path
 
 **The spine (longest dependency run):**
 
 ```
-T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → T16 → T18 → T19 → T21
+T01 → T02A → T02B → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → T16 → T18 → T19 → T21
 ```
 
 **Side tasks (can be parallelized):** T03, T04, T05, T06, T15, T17, T20.
@@ -43,8 +43,9 @@ T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → 
 | # | Task | Status | Deps | What it does |
 |---|------|--------|------|-------------|
 | **T01** | Repo hygiene & skeleton | ☑ | — | T01A ☑ `.gitattributes`/`.editorconfig`/`.gitignore`; T01B ☑ top-level skeleton (`apps`/`backend`/`infra`/`scripts`/`.github/workflows` + `.gitkeep`) |
-| **T02** | Backend project init | ☐ | T01 | `uv`, `ruff`, `mypy`, `pytest`, `pyproject.toml` |
-| **T07** | ORM base, naming convention, mixins | ☐ | T02 | Declarative Base, UUID/timestamp mixins, SQL naming |
+| **T02A** | uv project bootstrap | ☐ | T01 | runtime deps + `uv.lock` + `app/` package (ADR-0019, TR2) |
+| **T02B** | Quality toolchain config | ☐ | T02A | `ruff` `select=ALL`, `mypy` strict, `pytest` config |
+| **T07** | ORM base, naming convention, mixins | ☐ | T02B | Declarative Base, UUID/timestamp mixins, SQL naming |
 | **T08** | Core domain models | ☐ | T07 | `User`, `UserPreferences`, `Company`, `Job` |
 | **T09** | Application models | ☐ | T08 | `Resume`, `ResumeVersion`, `Application`, `StatusHistory` |
 | **T10** | Outreach/conversation models | ☐ | T09 | `Contact`, `Referral`, `ColdEmail`, `Conversation`, `Message`, `Notification` |
@@ -52,29 +53,29 @@ T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → 
 | **T12** | FastAPI app factory | ☐ | T03,T04,T05 | `create_app()`, middleware, `/health` endpoint |
 | **T13** | Test harness | ☐ | T05,T10,T12 | `conftest.py`, async DB fixtures, client fixture |
 | **T14** | Authentication (JWT) | ☐ | T06,T08,T12,T13 | Register, login, refresh, logout, protected routes |
-| **T16** | Backend Dockerfile | ☐ | T02,T12 | Multi-stage image, non-root, healthcheck |
+| **T16** | Backend Dockerfile | ☐ | T02B,T12 | Multi-stage image, non-root, healthcheck |
 | **T18** | docker-compose (full stack) | ☐ | T11,T15,T16,T17 | App + edge plane, migrations on startup, nginx reverse proxy |
-| **T19** | GitHub Actions CI | ☐ | T02,T11,T14 | Format-check, lint, type-check, tests, service containers |
+| **T19** | GitHub Actions CI | ☐ | T02B,T11,T14 | Format-check, lint, type-check, tests, service containers |
 | **T21** | Sprint closeout | ☐ | T18,T19 | Update tracking, README, journal retrospective |
 
 ### Side Tasks (Can Parallelize with Critical Path)
 
 | # | Task | Status | Deps | What it does |
 |---|------|--------|------|-------------|
-| **T03** | Core config + .env.example | ☐ | T02 | `pydantic-settings`, all env vars from §12.2 |
-| **T04** | Logging + exceptions | ☐ | T02,T03 | Loguru, `get_logger()`, custom exception classes |
-| **T05** | Async DB engine | ☐ | T02,T03 | SQLAlchemy async, `async_sessionmaker`, `get_session()` |
-| **T06** | Security (hash + JWT) | ☐ | T02,T03 | `passlib[bcrypt]`, `python-jose` tokens |
+| **T03** | Core config + .env.example | ☐ | T02B | `pydantic-settings`, all env vars from §12.2 |
+| **T04** | Logging + exceptions | ☐ | T02B,T03 | Loguru, `get_logger()`, custom exception classes |
+| **T05** | Async DB engine | ☐ | T02B,T03 | SQLAlchemy async, `async_sessionmaker`, `get_session()` |
+| **T06** | Security (hash + JWT) | ☐ | T02B,T03 | `passlib[bcrypt]`, `python-jose` tokens |
 | **T15** | Celery app factory | ☐ | T03,T04 | Celery app, Beat skeleton, ping health task |
 | **T17** | docker-compose data plane | ☐ | T01,T03 | postgres, redis, qdrant, minio, healthchecks, volumes |
-| **T20** | Developer experience (Make/scripts) | ☐ | T02,T12 | Makefile/justfile, seed script (one demo user) |
+| **T20** | Developer experience (Make/scripts) | ☐ | T02B,T12 | Makefile/justfile, seed script (one demo user) |
 
 ---
 
 ## Execution Strategy
 
 ### Wave 0 (Serial Foundation)
-- T01 → T02 (repo + project init)
+- T01 → T02A → T02B (repo + project init)
 
 ### Wave 1 (Parallel Divergence)
 - **Config track:** T03 → (feeds T04, T05, T06, T12, T15, T17)
@@ -84,18 +85,18 @@ T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → 
 - T04, T05, T06 (after T03)
 - T15 (after T03, T04)
 - T17 (after T01, T03)
-- T20 (after T02)
+- T20 (after T02B)
 
 ### Wave 3 (Integration)
 - T11 (needs T05 + T10)
 - T12 (needs T03 + T04 + T05)
 - T13 (needs T05 + T10 + T12)
 - T14 (needs T06 + T08 + T12 + T13)
-- T16 (needs T02 + T12)
+- T16 (needs T02B + T12)
 
 ### Wave 4 (Full Stack + Validation)
 - T18 (integration: needs T11 + T15 + T16 + T17)
-- T19 (CI: needs T02 + T11 + T14)
+- T19 (CI: needs T02B + T11 + T14)
 - T21 (closeout: needs T18 + T19)
 
 ---
@@ -122,7 +123,7 @@ T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → 
 | ADR-0016 | Auth token model (access/refresh/expiry) | Before T14 | Security lead |
 | ADR-0017 | Container runtime (base image, multi-stage, non-root) | During T16 | DevOps |
 | ADR-0018 | Ingress & port topology (nginx, root compose) | During T18 | Architect |
-| ADR-0019 | S1 dependency scoping (defer langchain/playwright/etc) | During T02 | Tech lead |
+| ADR-0019 | S1 dependency scoping (defer langchain/playwright/etc) | During T02A | Tech lead |
 
 All ADRs follow the format in [`docs/decision_log.md`](../../docs/decision_log.md).
 
@@ -133,7 +134,7 @@ All ADRs follow the format in [`docs/decision_log.md`](../../docs/decision_log.m
 | Risk | L×I | Mitigation | Owner |
 |------|:---:|-----------|-------|
 | **TR1** | Async Alembic quirks | Gate T11 on empty second autogenerate diff | DB engineer |
-| **TR2** | FastAPI-Users ↔ SQLAlchemy version drift | Lock known-compatible matrix in T02; T14 tests | Architect |
+| **TR2** | FastAPI-Users ↔ SQLAlchemy version drift | Lock known-compatible matrix in T02A; T14 tests | Architect |
 | **TR3** | Cyclic FK (resume_versions ↔ applications) | Keep soft ref; document in ADR-0013 | Data modeler |
 | **TR4** | uv-in-Docker lockfile mismatch | Pin uv version; use same lock in CI | DevOps |
 | **TR5** | Windows CRLF, Docker perf, mounts | `.gitattributes` (T01); develop against containers | Platform |

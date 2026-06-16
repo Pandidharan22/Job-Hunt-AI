@@ -16,7 +16,8 @@ gates, running privately on the user's machine. Full spec: [`PLAN.md`](PLAN.md).
 
 - **Phase:** Phase 1 — Core Foundation & Job Discovery
 - **Sprint:** **S1 — Project Bootstrap** · status **◐ In progress**
-- **Next task:** **S1-T02 — Backend project init** (`uv`/`ruff`/`mypy`/`pytest`); T01 is done
+- **Next task:** **S1-T02A — Backend uv project bootstrap** (runtime deps + lockfile); T01 is done
+  (T02 was split into T02A + T02B — see the execution plan)
 - **State of `main`:** governance + CCOS docs + repo-hygiene files
   (`.gitattributes`/`.editorconfig`/`.gitignore`) + top-level monorepo skeleton
   (`apps`/`backend`/`infra`/`scripts`/`.github/workflows`, each a `.gitkeep`). **No application code yet.**
@@ -87,7 +88,7 @@ Sessions start cold and have no memory of prior ones. To prevent drift:
 - [`.claude/README.md`](.claude/README.md) — the CCOS index.
 - [`docs/architecture.md`](docs/architecture.md) · [`docs/coding_standards.md`](docs/coding_standards.md) ·
   [`docs/development_workflow.md`](docs/development_workflow.md) · [`docs/decision_log.md`](docs/decision_log.md)
-- [`docs/sprint_s1_execution_plan.md`](docs/sprint_s1_execution_plan.md) — the 21 S1 task cards.
+- [`docs/sprint_s1_execution_plan.md`](docs/sprint_s1_execution_plan.md) — the 22 S1 task cards.
 
 > **Do not begin Sprint S1 implementation unless explicitly asked.** Default to planning, review, and
 > CCOS work; wait for the user to direct coding.

@@ -286,3 +286,55 @@ Every entry **must** contain all of the following, in this order:
 - **Next Recommended Task:** **S1-T02 — Backend project init**: `backend/pyproject.toml` with `uv`,
   `ruff` (line-length 100, `select=ALL`), `mypy` strict, and `pytest`/`pytest-asyncio`/`pytest-cov`;
   `backend/.python-version`; `backend/app/__init__.py`. (At that point `backend/.gitkeep` is removed.)
+
+### 2026-06-16T12:46Z — Planning: split S1-T02 into T02A + T02B
+
+- **Timestamp:** 2026-06-16T12:46Z (18:16 IST)
+- **Sprint:** S1 — Project Bootstrap
+- **Phase:** Phase 1 — Core Foundation & Job Discovery
+- **Task Name:** Re-plan — split S1-T02 (backend project init) into T02A + T02B (planning only)
+- **Objective:** Review whether S1-T02 should be split and, finding that it bundles two separable
+  concerns with different risk profiles, divide it and propagate the change through every planning
+  artifact and dependency. No application code — planning only.
+- **Files Modified:**
+  - `docs/sprint_s1_execution_plan.md` (summary table, spine, dependency tree, waves, T02 card → T02A
+    + T02B cards, downstream deps T02→T02B, TR2/ADR-0019 → T02A, linear order, revision note)
+  - `.claude/context/sprint_status.md` (task count 21→22, spine, T02 row → T02A/T02B, dep cells,
+    waves, ADR/risk tables, "next" pointer → T02A)
+  - `docs/sprint_tracking.md` (S1 link "21 tasks" → "22 tasks")
+  - `CLAUDE.md` (next task → S1-T02A; "21 S1 task cards" → 22; split note)
+  - `.claude/commands/create-adr.md` (ADR-0019 trigger → T02A)
+  - `.claude/context/project_rules.md` (sprint task count → 22)
+  - `dev_journal.md` (this entry)
+- **Technical Decisions:**
+  - **Split T02 → T02A (uv project bootstrap: runtime deps + lockfile + importable `app`) and T02B
+    (quality toolchain: ruff `select=ALL`/mypy strict/pytest config).**
+  - Repointed all eight downstream dependents (T03, T04, T05, T06, T07, T16, T19, T20) from T02 to
+    **T02B** — they need the configured quality gates to validate their code.
+  - Attached ADR-0019 (dependency scoping) and risk TR2 (FastAPI-Users ⇄ SQLAlchemy compat) to
+    **T02A**, where the runtime dependency surface is declared and locked.
+  - Kept the T03–T21 numbering; total task count 21 → 22; critical-path spine gains one node
+    (`T01 → T02A → T02B → T07 → …`).
+  - **No ADR for the split itself** — re-decomposing a planning task does not meet the ADR bar (no
+    framework/datastore/cross-cutting/PLAN-deviation change).
+- **Reasoning Behind Decisions:**
+  - T02A and T02B are genuinely separable: one declares/locks the runtime dependency matrix (the real
+    risk = fastapi-users↔sqlalchemy compat), the other writes the opinionated, iteration-prone
+    `select=ALL` ignore configuration. Isolating them yields two focused, independently-reviewable
+    diffs and clean per-task DoDs.
+  - The split is non-churning: T02B layers a dev-dependency group + `[tool.*]` config onto T02A
+    without rewriting T02A's `[project]` table — unlike a naïve split it forces no rework.
+  - Matches the project's one-concern-per-commit cadence (precedent: T01A/T01B).
+- **Problems Encountered:** Several identical dependency strings across task cards/rows (e.g.
+  `T02, T03`) risked partial edits.
+- **Solutions Applied:** Used scoped `replace_all` on exact, unique cell/line strings and verified
+  with a repo-wide `\bT02\b` grep that every remaining bare `T02` is either immutable journal history,
+  an explanatory note, or a generic example in `start-task.md` (intentionally left as teaching text).
+- **Validation Performed:**
+  - `\bT02\b` grep across all Markdown → no stray live references; downstream deps now read `T02B`.
+  - Cross-checked the execution plan and `sprint_status.md` agree on: spine, task count (22), T02A/T02B
+    cards/rows, and dependency cells.
+  - Planning-only: no code, so no `ruff`/`mypy`/`pytest` — stated honestly.
+- **Commit Hash:** _pending_
+- **Next Recommended Task:** **S1-T02A — Backend uv project bootstrap** (declare + lock the S1 runtime
+  dependency surface; importable `app` package), then **S1-T02B** (ruff/mypy/pytest config).

@@ -10,6 +10,8 @@
 - **Status entering:** Not started
 - **Authoring roles:** Principal Architect / Technical Program Manager / Senior Staff Engineer
 - **Date:** 2026-06-14
+- **Revised:** 2026-06-15 — **T02 split into T02A (uv project bootstrap) + T02B (quality toolchain)**;
+  downstream dependencies repointed to T02B. Task count 21 → 22.
 
 ---
 
@@ -45,12 +47,13 @@ FastAPI/SQLAlchemy/Celery/auth stack only — `langchain`, `langgraph`, `playwri
 | ID | Task | Deps | Cplx | Risk | Context |
 |----|------|------|:---:|:---:|:---:|
 | **T01** | Repo hygiene & monorepo skeleton | — | 2 | 1 | Low |
-| **T02** | Backend project init (uv/ruff/mypy/pytest) | T01 | 3 | 3 | Low–Med |
-| **T03** | Core config (`pydantic-settings`) + `.env.example` | T02 | 3 | 3 | Med |
-| **T04** | Core primitives: logging (Loguru) + exceptions | T02,T03 | 2 | 2 | Low |
-| **T05** | Async DB engine + session factory | T02,T03 | 4 | 4 | Med |
-| **T06** | Security utils (password hashing + JWT) | T02,T03 | 4 | 5 | Med |
-| **T07** | ORM base: declarative Base, naming convention, mixins | T02 | 4 | 5 | Med |
+| **T02A** | Backend uv project bootstrap (runtime deps + lockfile) | T01 | 2 | 3 | Low–Med |
+| **T02B** | Quality toolchain config (ruff `select=ALL` / mypy strict / pytest) | T02A | 3 | 3 | Low–Med |
+| **T03** | Core config (`pydantic-settings`) + `.env.example` | T02B | 3 | 3 | Med |
+| **T04** | Core primitives: logging (Loguru) + exceptions | T02B,T03 | 2 | 2 | Low |
+| **T05** | Async DB engine + session factory | T02B,T03 | 4 | 4 | Med |
+| **T06** | Security utils (password hashing + JWT) | T02B,T03 | 4 | 5 | Med |
+| **T07** | ORM base: declarative Base, naming convention, mixins | T02B | 4 | 5 | Med |
 | **T08** | Core domain models (User, UserPreferences, Company, Job) | T07 | 4 | 3 | Med |
 | **T09** | Application-domain models (Resume, ResumeVersion, Application, StatusHistory) | T08 | 5 | 4 | Med |
 | **T10** | Outreach/conversation/notification models | T09 | 5 | 3 | Med–High |
@@ -59,11 +62,11 @@ FastAPI/SQLAlchemy/Celery/auth stack only — `langchain`, `langgraph`, `playwri
 | **T13** | Test harness (conftest, async DB + client fixtures) | T05,T10,T12 | 5 | 5 | Med |
 | **T14** | Auth via FastAPI-Users (schemas, manager, JWT backend, routes) | T06,T08,T12,T13 | 7 | 7 | High |
 | **T15** | Celery app factory + Beat skeleton + health task | T03,T04 | 4 | 4 | Med |
-| **T16** | Backend Dockerfile | T02,T12 | 4 | 4 | Med |
+| **T16** | Backend Dockerfile | T02B,T12 | 4 | 4 | Med |
 | **T17** | docker-compose: data plane (postgres/redis/qdrant/minio) | T01,T03 | 4 | 4 | Med |
 | **T18** | docker-compose: app/edge plane (api/worker/beat/flower/nginx) + root compose | T11,T15,T16,T17 | 6 | 6 | High |
-| **T19** | GitHub Actions CI | T02,T11,T14 | 5 | 5 | Med |
-| **T20** | Developer experience (Makefile/justfile + minimal seed) | T02,T12 | 2 | 2 | Low |
+| **T19** | GitHub Actions CI | T02B,T11,T14 | 5 | 5 | Med |
+| **T20** | Developer experience (Makefile/justfile + minimal seed) | T02B,T12 | 2 | 2 | Low |
 | **T21** | Sprint S1 closeout (tracking/README/retro) | T18,T19 | 2 | 2 | Low–Med |
 
 *Context bands: Low ≈ <15k tokens · Med ≈ 15–40k · High ≈ 40–70k, per fresh per-task Claude Code
@@ -76,7 +79,7 @@ context (read dependencies + generate code + tests + docs + journal).*
 **The spine (critical path):**
 
 ```
-T01 → T02 → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → T16 → T18 → T19 → T21
+T01 → T02A → T02B → T07 → T08 → T09 → T10 → T11 → T12 → T13 → T14 → T16 → T18 → T19 → T21
 ```
 
 The **data-model chain (T07→T11)** is the longest dependency run and the highest-stakes — it gates
@@ -86,25 +89,22 @@ the app factory, tests, auth, and the container that runs migrations. Treat it a
 feeds T14; `T15` (celery) and `T17` (data-plane compose) feed T18.
 
 ```
-T01
- └─T02
-    ├─T03─┬─T04────────────┐
-    │     ├─T05───────┐    │
-    │     └─T06───────┼────┼──────────────┐
-    ├─T07─T08─T09─T10─┴─T11─T12─T13─T14    │ (T14 also needs T06)
-    │                       │   │          │
-    ├─T15───────────────────┤   │          │
-    └─T17───────────────────┤   │          │
-                            T16─┘          │
-                             └─T18─T19─T21  (T19 also needs T14)
+T01 ─ T02A ─ T02B ─┬─ T03 ─┬─ T04 ──────────────┐
+                   │       ├─ T05 ─┐             │
+                   │       └─ T06 ─┼──────────┐  │
+                   ├─ T07 ─ T08 ─ T09 ─ T10 ─┴─ T11 ─ T12 ─ T13 ─ T14   (T14 also needs T06)
+                   ├─ T15 ──────────────────────────────┐
+                   └─ T17 ──────────────────────────────┤
+                                                  T16 ──┤   (T16 also needs T12)
+                                                   └─ T18 ─ T19 ─ T21   (T19 also needs T14)
 ```
 
 ## 3. Parallelization Plan (suggested waves)
 
-- **Wave 0:** T01 → T02 (serial; everything roots here).
+- **Wave 0:** T01 → T02A → T02B (serial; everything roots here).
 - **Wave 1 (parallel):** T03, T07. *(config track + ORM-base track diverge here)*
 - **Wave 2 (parallel):** T04, T05, T06 (after T03) ‖ T08 (after T07) ‖ T15 (after T03/T04) ‖
-  T17 (after T03) ‖ T20 (after T02).
+  T17 (after T03) ‖ T20 (after T02B).
 - **Wave 3:** T09 → T10 (model chain) ‖ T12 (after T03/T04/T05).
 - **Wave 4:** T11 (needs T05+T10) → T13 (needs T11+T12) → T14 (needs T06+T13) ‖ T16 (after T12).
 - **Wave 5:** T18 (integration) → T19 (CI) → T21 (closeout).
@@ -132,25 +132,48 @@ A solo developer should still run the model chain serially; the genuine parallel
 - **Commit:** `chore(repo): add monorepo skeleton, gitignore and line-ending policy`
 - **Complexity 2 · Risk 1 · Context Low**
 
-### S1-T02 — Backend project init (uv + ruff + mypy + pytest)
+### S1-T02A — Backend uv project bootstrap (runtime deps + lockfile)
 
-- **Objective:** Initialize the Python project and quality toolchain per
-  [`coding_standards.md` §2](coding_standards.md) and [ADR-0011](decision_log.md).
+- **Objective:** Stand up the `backend/` Python project with `uv` and declare + lock the **S1 runtime
+  dependency surface**; make the `app` package importable. This is where the dependency-scoping
+  decision ([ADR-0019](decision_log.md)) and the FastAPI-Users ⇄ SQLAlchemy compatibility matrix
+  ([TR2](#5-risk-register)) are settled.
 - **Dependencies:** T01.
-- **Files Expected:** `backend/pyproject.toml` (uv project; ruff line-length 100 + `select=ALL` with
-  documented ignores; mypy strict; pytest + pytest-asyncio + pytest-cov), `backend/uv.lock`,
-  `backend/.python-version`, `backend/app/__init__.py`.
-- **Validation Criteria:** `uv sync` resolves; `uv run ruff check .` and `uv run ruff format --check .`
-  pass on the empty tree; `uv run mypy app/` clean; `uv run pytest` collects 0 tests without error.
-- **Definition of Done:** Toolchain reproducible from lockfile; all four commands green.
-- **Commit:** `chore(backend): initialize uv project with ruff, mypy strict and pytest`
+- **Files Expected:** `backend/pyproject.toml` (`[project]` metadata + runtime deps: `fastapi`,
+  `uvicorn[standard]`, `sqlalchemy[asyncio]`, `alembic`, `pydantic`, `pydantic-settings`,
+  `celery[redis]`, `redis`, `fastapi-users[sqlalchemy]`, `python-jose[cryptography]`,
+  `passlib[bcrypt]`, `httpx`, `loguru`), `backend/uv.lock`, `backend/.python-version`,
+  `backend/app/__init__.py`. (Removes `backend/.gitkeep`.)
+- **Validation Criteria:** `uv sync` resolves the full S1 runtime set with no conflicts;
+  `uv run python -c "import app"` succeeds; `langchain`/`langgraph`/`playwright`/`crawl4ai`/
+  `sentence-transformers`/`qdrant-client` are **not** present (deferred per ADR-0019).
+- **Definition of Done:** Reproducible runtime environment from a committed lockfile; app package imports.
+- **Commit:** `chore(backend): bootstrap uv project and lock S1 runtime dependencies`
+- **Complexity 2 · Risk 3 (dependency resolution + fastapi-users/sqlalchemy compat) · Context Low–Med**
+
+### S1-T02B — Quality toolchain configuration (ruff / mypy / pytest)
+
+- **Objective:** Add and configure the quality gates per
+  [`coding_standards.md` §2](coding_standards.md) and [ADR-0011](decision_log.md): ruff (lint +
+  format), mypy strict, and pytest. Isolates the opinionated, iteration-prone `select=ALL`
+  ignore-tuning into its own reviewable diff.
+- **Dependencies:** T02A.
+- **Files Expected:** `backend/pyproject.toml` (dev group: `ruff`, `mypy`, `pytest`,
+  `pytest-asyncio`, `pytest-cov`; plus `[tool.ruff]` line-length 100 + `select=ALL` with **documented
+  ignores**, `[tool.mypy]` strict, `[tool.pytest.ini_options]` + coverage config); updated
+  `backend/uv.lock`.
+- **Validation Criteria:** `uv run ruff format --check .` and `uv run ruff check .` pass on the empty
+  tree; `uv run mypy app/` clean (strict); `uv run pytest` collects 0 tests without error.
+- **Definition of Done:** All four quality commands green and reproducible from the lockfile; every
+  ruff ignore has a one-line justification.
+- **Commit:** `chore(backend): configure ruff, mypy strict and pytest toolchain`
 - **Complexity 3 · Risk 3 (select=ALL ignore tuning) · Context Low–Med**
 
 ### S1-T03 — Core configuration + environment contract
 
 - **Objective:** Implement `Settings` (pydantic-settings) covering **every** variable in
   [`PLAN.md` §12.2](../PLAN.md); produce `.env.example` files.
-- **Dependencies:** T02.
+- **Dependencies:** T02B.
 - **Files Expected:** `backend/app/core/__init__.py`, `backend/app/core/config.py`,
   `backend/.env.example`, root `.env.example`; `backend/tests/unit/test_config.py`.
 - **Validation Criteria:** Settings loads from env; missing required → clear validation error;
@@ -163,7 +186,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** Loguru-based `get_logger` and the custom exception hierarchy (`core/exceptions.py`)
   used across layers.
-- **Dependencies:** T02, T03 (log level from settings).
+- **Dependencies:** T02B, T03 (log level from settings).
 - **Files Expected:** `backend/app/core/logging.py`, `backend/app/core/exceptions.py`,
   `backend/tests/unit/test_logging.py`.
 - **Validation Criteria:** Logger emits structured output at configured level; base + key subclasses
@@ -176,7 +199,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** Async SQLAlchemy 2.0 engine, `async_sessionmaker`, and a `get_session` dependency
   (unit-of-work contract referenced in [`coding_standards.md` §2.5](coding_standards.md)).
-- **Dependencies:** T02, T03.
+- **Dependencies:** T02B, T03.
 - **Files Expected:** `backend/app/core/database.py`, `backend/tests/integration/test_database.py`.
 - **Validation Criteria:** `SELECT 1` over an async session against a live PG; session
   closes/rolls back correctly; ruff/mypy clean.
@@ -188,7 +211,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** `passlib[bcrypt]` hashing and `python-jose` access/refresh token create/verify per
   candidate [ADR-0016](#8-adrs-likely-required-during-s1).
-- **Dependencies:** T02, T03.
+- **Dependencies:** T02B, T03.
 - **Files Expected:** `backend/app/core/security.py`, `backend/tests/unit/test_security.py`.
 - **Validation Criteria:** hash↔verify round-trip; token encode/decode honors expiry & algorithm;
   tampered/expired tokens rejected; ruff/mypy clean.
@@ -201,7 +224,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 - **Objective:** Declarative `Base` with an explicit SQLAlchemy **naming convention** (deterministic
   constraint/index names → clean autogenerate) and `UUIDPKMixin` + `TimestampMixin` matching §7
   (`gen_random_uuid()`, `server_default=now()`). **Architectural — locks patterns for all models.**
-- **Dependencies:** T02.
+- **Dependencies:** T02B.
 - **Files Expected:** `backend/app/models/__init__.py`, `backend/app/models/base.py`,
   `backend/tests/unit/test_models_base.py`.
 - **Validation Criteria:** Mixins produce expected columns/server defaults; naming convention applied
@@ -326,7 +349,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** Multi-stage image (uv install → slim runtime), non-root user, healthcheck, uvicorn
   entrypoint.
-- **Dependencies:** T02, T12.
+- **Dependencies:** T02B, T12.
 - **Files Expected:** `backend/Dockerfile`, `backend/.dockerignore`, optional
   `backend/docker-entrypoint.sh`.
 - **Validation Criteria:** `docker build` succeeds; container serves `/health`; image excludes
@@ -367,7 +390,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** PR pipeline: `uv sync` → ruff format-check → ruff check → mypy → pytest+coverage,
   with postgres/redis **service containers**.
-- **Dependencies:** T02, T11, T14.
+- **Dependencies:** T02B, T11, T14.
 - **Files Expected:** `.github/workflows/ci.yml`.
 - **Validation Criteria:** Workflow valid (`actionlint`/dry parse); mirrors
   [`development_workflow.md` §5](development_workflow.md) commands; runs migrations + full suite
@@ -380,7 +403,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 
 - **Objective:** Encode the workflow commands (`up`, `down`, `migrate`, `test`, `lint`, `format`,
   `typecheck`) and a **minimal real** seed (one demo user) — not a mock.
-- **Dependencies:** T02, T12 (seed needs models/session; keep to one user, jobs deferred to S2).
+- **Dependencies:** T02B, T12 (seed needs models/session; keep to one user, jobs deferred to S2).
 - **Files Expected:** `Makefile` *or* `justfile`, `scripts/seed_data.py`.
 - **Validation Criteria:** Each target runs the documented command; seed inserts and is idempotent.
 - **Definition of Done:** One-line access to common tasks; seed runnable.
@@ -409,7 +432,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 | # | Risk | L×I | Mitigation |
 |---|------|:---:|-----------|
 | TR1 | Async Alembic `env.py` + autogenerate quirks (greenlet, async run) | H·H | Use the official async template; gate T11 on an **empty second autogenerate diff**. |
-| TR2 | FastAPI-Users ⇄ SQLAlchemy 2.0 async version drift | M·H | Pin a known-compatible matrix in T02; integration test (T14) as the proof. |
+| TR2 | FastAPI-Users ⇄ SQLAlchemy 2.0 async version drift | M·H | Pin a known-compatible matrix in T02A; integration test (T14) as the proof. |
 | TR3 | Cyclic FK (resume_versions ↔ applications) | M·M | Keep `application_id` a **soft ref** per §7 (no hard FK); document in ADR-0013. |
 | TR4 | uv-in-Docker layer caching / lockfile mismatch | M·M | Pin uv version; copy lock before source; CI uses the same lock. |
 | TR5 | Windows host friction (CRLF, mounts, Docker perf) | M·M | `.gitattributes` (T01); develop against containers; CI on Linux is source of truth. |
@@ -461,7 +484,7 @@ A solo developer should still run the model chain serially; the genuine parallel
 | **ADR-0016** | Authentication & token model (FastAPI-Users, access+refresh, expiry, transport) | T06/T14 | Must |
 | **ADR-0017** | Container runtime & build (base image, uv-in-Docker, multi-stage, non-root) | T16 | Should |
 | **ADR-0018** | Ingress & port topology (nginx single entrypoint; root-compose vs `-f`) | T18 | Optional |
-| **ADR-0019** | S1 dependency scoping (defer langchain/langgraph/playwright/crawl4ai to S2–S4) | T02 | Should |
+| **ADR-0019** | S1 dependency scoping (defer langchain/langgraph/playwright/crawl4ai to S2–S4) | T02A | Should |
 
 These continue the sequence after ADR-0001–0012 in [`decision_log.md`](decision_log.md).
 
@@ -470,7 +493,7 @@ These continue the sequence after ADR-0001–0012 in [`decision_log.md`](decisio
 ## 9. Recommended Execution Order (linear, for a solo build)
 
 ```
-T01 → T02 → T03 → T04 → T05 → T06 → T07 →(ADR-0013)→ T08 → T09 → T10 →
+T01 → T02A → T02B → T03 → T04 → T05 → T06 → T07 →(ADR-0013)→ T08 → T09 → T10 →
 T11 →(ADR-0014)→ T12 → T13 →(ADR-0015)→ T14 →(ADR-0016, CP-C)→ T15 →
 T16 →(ADR-0017)→ T17 → T18 →(CP-D)→ T19 → T20 → T21 →(CP-E)
 ```

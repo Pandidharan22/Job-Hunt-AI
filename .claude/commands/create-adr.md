@@ -45,7 +45,7 @@ The sprint plan anticipates these (see [`context/sprint_status.md`](../context/s
 | ADR-0016 | Authentication & token model (access/refresh/expiry/transport) | Before T14 |
 | ADR-0017 | Container runtime & build (base image, uv-in-Docker, multi-stage, non-root) | During T16 |
 | ADR-0018 | Ingress & port topology (nginx single entrypoint; root compose) | During T18 (optional) |
-| ADR-0019 | S1 dependency scoping (defer langchain/playwright/crawl4ai to S2–S4) | During T02 |
+| ADR-0019 | S1 dependency scoping (defer langchain/playwright/crawl4ai to S2–S4) | During T02A |
 
 ---
 
